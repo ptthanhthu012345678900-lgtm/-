@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>《汉语教程》句子听写 · 第1–12课</title>
+<link rel="stylesheet" href="https://miaoda.feishu.cn/fonts/css2?family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@600;700&display=swap">
+<style>
+  :root{
+    --bg:#f6f3ec; --card:#fffdf8; --ink:#2f322b; --sub:#7a7d72;
+    --line:#e6dfd0; --accent:#3f8f7a; --accent-soft:#dcefe9;
+    --bad:#c85a54; --good:#3f8f7a;
+    --shadow:0 2px 10px rgba(80,70,50,.10);
+    --radius:16px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+  body{
+    font-family:"Noto Sans SC",system-ui,-apple-system,"PingFang SC",sans-serif;
+    background:var(--bg); color:var(--ink); min-height:100vh;
+    background-image:radial-gradient(circle at 10% 0%,#efe9d8 0,transparent 40%),radial-gradient(circle at 100% 10%,#e7f0ec 0,transparent 45%);
+  }
+  .wrap{max-width:560px;margin:0 auto;padding:18px 16px 90px;}
+  header.top{display:flex;align-items:center;justify-content:space-between;margin:6px 0 18px;}
+  header.top h1{font-family:"Noto Serif SC",serif;font-size:21px;font-weight:700;}
+  header.top .sub{font-size:12px;color:var(--sub);margin-top:3px;}
+  .pill-btn{border:none;background:var(--card);box-shadow:var(--shadow);border-radius:12px;padding:9px 14px;font-size:13px;color:var(--ink);cursor:pointer;}
+
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:14px;box-shadow:var(--shadow);margin-bottom:18px;}
+  .panel h2{font-size:13px;color:var(--sub);font-weight:500;margin-bottom:10px;}
+  .row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;}
+  .seg{display:flex;background:#f0ebe0;border-radius:11px;padding:3px;gap:3px;}
+  .seg button{border:none;background:transparent;padding:7px 12px;border-radius:9px;font-size:13px;color:var(--sub);cursor:pointer;}
+  .seg button.on{background:var(--accent);color:#fff;font-weight:500;}
+  select{border:1px solid var(--line);background:#fff;border-radius:10px;padding:8px 10px;font-size:13px;color:var(--ink);}
+  .toggle{display:flex;align-items:center;gap:7px;font-size:13px;color:var(--sub);cursor:pointer;}
+  .toggle input{accent-color:var(--accent);}
+
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .lesson{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:14px;box-shadow:var(--shadow);cursor:pointer;transition:transform .12s;}
+  .lesson:active{transform:scale(.97);}
+  .lesson .num{font-size:12px;color:var(--accent);font-weight:700;letter-spacing:.5px;}
+  .lesson .title{font-size:16px;font-weight:700;margin:5px 0 8px;}
+  .lesson .meta{font-size:12px;color:var(--sub);display:flex;justify-content:space-between;align-items:center;}
+  .badge{font-size:11px;padding:3px 8px;border-radius:8px;background:var(--accent-soft);color:var(--good);}
+  .badge.miss{background:#fbeae6;color:var(--bad);}
+  .lesson .mini{margin-top:8px;display:flex;gap:6px;}
+  .lesson .mini button{flex:1;border:1px dashed var(--line);background:#fff;border-radius:9px;font-size:11px;color:var(--sub);padding:6px 4px;cursor:pointer;}
+
+  .quiz-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;font-size:13px;color:var(--sub);}
+  .progress{height:8px;background:#ece5d6;border-radius:99px;overflow:hidden;margin-bottom:22px;}
+  .progress i{display:block;height:100%;background:var(--accent);border-radius:99px;transition:width .25s;}
+  .card-quiz{background:var(--card);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow);padding:24px 18px;text-align:center;}
+  .prompt{font-size:14px;color:var(--sub);margin-bottom:16px;}
+  .big-play{width:74px;height:74px;border-radius:50%;border:none;background:var(--accent);color:#fff;font-size:30px;cursor:pointer;box-shadow:0 6px 16px rgba(63,143,122,.35);margin:6px 0 18px;}
+  .big-play:active{transform:scale(.94);}
+  .pinyin-line{font-size:17px;line-height:1.9;color:var(--ink);font-weight:600;margin:10px 0 18px;letter-spacing:.5px;}
+  .vn-hint{font-size:14px;color:var(--sub);margin-bottom:18px;line-height:1.6;}
+  .answer-input{width:100%;border:2px solid var(--line);border-radius:14px;padding:15px 16px;font-size:20px;letter-spacing:2px;background:#fff;outline:none;font-family:inherit;line-height:1.6;}
+  .answer-input:focus{border-color:var(--accent);}
+  .actions{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap;}
+  .actions button{flex:1;min-width:90px;border:none;border-radius:13px;padding:13px 10px;font-size:14px;cursor:pointer;font-family:inherit;}
+  .btn-primary{background:var(--accent);color:#fff;font-weight:600;}
+  .btn-ghost{background:#f0ebe0;color:var(--ink);}
+
+  .feedback{margin-top:18px;border-radius:16px;padding:18px;text-align:left;display:none;}
+  .feedback.ok{background:var(--accent-soft);display:block;}
+  .feedback.no{background:#fbeae6;display:block;}
+  .feedback .tag{font-size:13px;font-weight:700;margin-bottom:6px;}
+  .feedback .sentence{font-size:22px;font-weight:700;line-height:1.7;margin:4px 0;}
+  .feedback .py{font-size:15px;color:var(--accent);margin-bottom:6px;line-height:1.7;}
+  .feedback .vn{font-size:14px;color:var(--sub);line-height:1.6;}
+  .feedback .mine{font-size:13px;color:var(--bad);margin-top:8px;line-height:1.6;}
+
+  .result{text-align:center;padding:20px 0;}
+  .result .score{font-size:52px;font-weight:700;color:var(--accent);font-family:"Noto Serif SC",serif;margin:10px 0;}
+  .result p{color:var(--sub);font-size:14px;margin-bottom:20px;}
+  .review-list{text-align:left;margin-top:16px;display:flex;flex-direction:column;gap:8px;}
+  .review-list .item{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:11px 14px;font-size:15px;}
+  .review-list .item .meta{font-size:12px;color:var(--sub);margin-top:4px;line-height:1.5;}
+  .review-list .item.bad{border-color:#f3c2bd;}
+  .center-btns{display:flex;gap:10px;margin-top:22px;flex-wrap:wrap;}
+
+  .dict-search{width:100%;border:1px solid var(--line);border-radius:12px;padding:11px 13px;font-size:14px;background:#fff;margin-bottom:14px;outline:none;}
+  .dict-item{display:flex;align-items:flex-start;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:13px;padding:11px 14px;margin-bottom:9px;}
+  .dict-item .txt{flex:1;}
+  .dict-item .h{font-size:17px;font-weight:600;line-height:1.6;}
+  .dict-item .p{font-size:13px;color:var(--accent);margin:3px 0;line-height:1.6;}
+  .dict-item .v{font-size:13px;color:var(--sub);line-height:1.5;}
+  .dict-item button{border:none;background:var(--accent-soft);color:var(--good);border-radius:10px;width:36px;height:36px;cursor:pointer;font-size:16px;flex-shrink:0;}
+  .tabbar{display:flex;gap:6px;background:#ece5d6;border-radius:13px;padding:4px;margin-bottom:16px;}
+  .tabbar button{flex:1;border:none;background:transparent;padding:9px;border-radius:10px;font-size:13px;color:var(--sub);cursor:pointer;}
+  .tabbar button.on{background:#fff;color:var(--ink);font-weight:600;box-shadow:var(--shadow);}
+  .note{font-size:12px;color:var(--sub);line-height:1.7;margin-top:14px;padding:12px 14px;background:#fff8ec;border:1px dashed #e8d9b8;border-radius:12px;}
+  @media (max-width:380px){.grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div>
+      <h1>《汉语教程》句子听写</h1>
+      <div class="sub">初级上册 · 第 1–12 课 · 拼音 + 越南语释义</div>
+    </div>
+    <button class="pill-btn" id="btnHome" style="display:none" onclick="goHome()">← 返回</button>
+  </header>
+
+  <div id="app"></div>
+</div>
+
+<script>
+/* =====================================================================
+   句子数据：h=汉字句子  p=拼音  vn=越南语译文
+   句子选自各课课本对话；可直接在本数组内替换成课本原句。
+   ===================================================================== */
+const LESSONS = [
+  { title:"你好", sentences:[
+    {h:"你好！", p:"Nǐ hǎo!", vn:"Xin chào!"},
+    {h:"谢谢！", p:"Xièxie!", vn:"Cảm ơn!"},
+    {h:"早上好！", p:"Zǎoshang hǎo!", vn:"Chào buổi sáng!"},
+    {h:"我很好。", p:"Wǒ hěn hǎo.", vn:"Tôi rất khỏe."},
+    {h:"你呢？", p:"Nǐ ne?", vn:"Còn bạn thì sao?"},
+  ]},
+  { title:"汉语不太难", sentences:[
+    {h:"你忙吗？", p:"Nǐ máng ma?", vn:"Bạn có bận không?"},
+    {h:"很忙。", p:"Hěn máng.", vn:"Rất bận."},
+    {h:"汉语难吗？", p:"Hànyǔ nán ma?", vn:"Tiếng Trung có khó không?"},
+    {h:"不太难。", p:"Bú tài nán.", vn:"Không khó lắm."},
+  ]},
+  { title:"明天见", sentences:[
+    {h:"明天见！", p:"Míngtiān jiàn!", vn:"Ngày mai gặp!"},
+    {h:"再见！", p:"Zàijiàn!", vn:"Hẹn gặp lại / tạm biệt!"},
+    {h:"周末见！", p:"Zhōumò jiàn!", vn:"Cuối tuần gặp!"},
+    {h:"好久不见！", p:"Hǎo jiǔ bù jiàn!", vn:"Lâu ngày không gặp!"},
+    {h:"我去见朋友。", p:"Wǒ qù jiàn péngyou.", vn:"Tôi đi gặp bạn."},
+    {h:"他去见客户。", p:"Tā qù jiàn kèhù.", vn:"Anh ấy đi gặp khách hàng."},
+    {h:"我弟弟学德语，我哥哥学俄语。", p:"Wǒ dìdi xué Déyǔ, wǒ gēge xué Éyǔ.", vn:"Em trai tôi học tiếng Đức, anh trai tôi học tiếng Nga."},
+    {h:"我家有五口人：爸爸、妈妈、弟弟、妹妹和我。", p:"Wǒ jiā yǒu wǔ kǒu rén: bàba, māma, dìdi, mèimei hé wǒ.", vn:"Nhà tôi có 5 người: ba, mẹ, em trai, em gái và tôi."},
+    {h:"弟弟在学校学英语，妹妹学韩语，我在北京学汉语。", p:"Dìdi zài xuéxiào xué Yīngyǔ, mèimei xué Hányǔ, wǒ zài Běijīng xué Hànyǔ.", vn:"Em trai học tiếng Anh ở trường, em gái học tiếng Hàn, tôi học tiếng Trung ở Bắc Kinh."},
+    {h:"汉语不难，英语也不难，韩语很难。", p:"Hànyǔ bù nán, Yīngyǔ yě bù nán, Hányǔ hěn nán.", vn:"Tiếng Trung không khó, tiếng Anh cũng không khó, tiếng Hàn rất khó."},
+  ]},
+  { title:"你去哪儿", sentences:[
+    {h:"昨天我爸爸去银行存钱。", p:"Zuótiān wǒ bàba qù yínháng cún qián.", vn:"Hôm qua ba tôi đi ngân hàng gửi tiền."},
+    {h:"今天我妈妈去邮局寄信。", p:"Jīntiān wǒ māma qù yóujú jì xìn.", vn:"Hôm nay mẹ tôi đi bưu điện gửi thư."},
+    {h:"明天我去北京玩儿。", p:"Míngtiān wǒ qù Běijīng wánr.", vn:"Ngày mai tôi đi Bắc Kinh chơi."},
+    {h:"我在北京学习。", p:"Wǒ zài Běijīng xuéxí.", vn:"Tôi đi học ở Bắc Kinh."},
+    {h:"我在学校学英语。", p:"Wǒ zài xuéxiào xué Yīngyǔ.", vn:"Tôi học tiếng Anh ở trường học."},
+    {h:"你去北京几天？", p:"Nǐ qù Běijīng jǐ tiān?", vn:"Bạn đi Bắc Kinh mấy ngày?"},
+    {h:"今天几月几号？", p:"Jīntiān jǐ yuè jǐ hào?", vn:"Hôm nay ngày mấy tháng mấy?"},
+    {h:"今天星期几？", p:"Jīntiān xīngqī jǐ?", vn:"Hôm nay thứ mấy?"},
+    {h:"你家人去天安门和北京几周？", p:"Nǐ jiārén qù Tiānānmén hé Běijīng jǐ zhōu?", vn:"Gia đình bạn đi Thiên An Môn và Bắc Kinh mấy tuần?"},
+    {h:"我家人去天安门一周，去北京四天。", p:"Wǒ jiārén qù Tiānānmén yì zhōu, qù Běijīng sì tiān.", vn:"Gia đình tôi đi Thiên An Môn một tuần, đi Bắc Kinh bốn ngày."},
+    {h:"你一周去学校几天？", p:"Nǐ yì zhōu qù xuéxiào jǐ tiān?", vn:"Một tuần bạn đi đến trường mấy ngày?"},
+    {h:"你去哪儿？——我去天安门。", p:"Nǐ qù nǎr? —— Wǒ qù Tiānānmén.", vn:"Bạn đi đâu đấy? — Tôi đi Thiên An Môn."},
+    {h:"今天我不去上课，我去邮局寄信。", p:"Jīntiān wǒ bú qù shàngkè, wǒ qù yóujú jì xìn.", vn:"Hôm nay tôi không đi học, tôi đi bưu điện gửi thư."},
+    {h:"明天我不去哪儿玩儿，我回家。", p:"Míngtiān wǒ bú qù nǎr wánr, wǒ huí jiā.", vn:"Ngày mai tôi không đi chơi đâu, tôi trở về nhà."},
+    {h:"你几月几号回国？", p:"Nǐ jǐ yuè jǐ hào huí guó?", vn:"Bạn ngày mấy tháng mấy về nước?"},
+  ]},
+  { title:"这是王老师", sentences:[
+    {h:"这是王老师。", p:"Zhè shì Wáng lǎoshī.", vn:"Đây là thầy Vương."},
+    {h:"王老师，您好！", p:"Wáng lǎoshī, nín hǎo!", vn:"Thầy Vương, xin chào thầy!"},
+    {h:"这是我爸爸。", p:"Zhè shì wǒ bàba.", vn:"Đây là bố tôi."},
+    {h:"谢谢！", p:"Xièxie!", vn:"Cảm ơn!"},
+    {h:"不客气！", p:"Bú kèqi!", vn:"Không khách khí!"},
+    {h:"工作忙吗？", p:"Gōngzuò máng ma?", vn:"Công việc có bận không?"},
+    {h:"身体好吗？", p:"Shēntǐ hǎo ma?", vn:"Sức khỏe có tốt không?"},
+  ]},
+  { title:"我学习汉语", sentences:[
+    {h:"我学习汉语。", p:"Wǒ xuéxí Hànyǔ.", vn:"Tôi học tiếng Trung."},
+    {h:"你学习什么？", p:"Nǐ xuéxí shénme?", vn:"Bạn học gì?"},
+    {h:"他学习英语。", p:"Tā xuéxí Yīngyǔ.", vn:"Anh ấy học tiếng Anh."},
+    {h:"我们一起学习。", p:"Wǒmen yìqǐ xuéxí.", vn:"Chúng ta cùng học."},
+    {h:"汉语不难。", p:"Hànyǔ bù nán.", vn:"Tiếng Trung không khó."},
+    {h:"我每天学习汉语。", p:"Wǒ měitiān xuéxí Hànyǔ.", vn:"Tôi học tiếng Trung mỗi ngày."},
+    {h:"你是哪国人？", p:"Nǐ shì nǎ guó rén?", vn:"Bạn là người nước nào?"},
+    {h:"我是中国人。", p:"Wǒ shì Zhōngguó rén.", vn:"Tôi là người Trung Quốc."},
+  ]},
+  { title:"你吃什么", sentences:[
+    {h:"你吃什么？", p:"Nǐ chī shénme?", vn:"Bạn ăn gì?"},
+    {h:"我吃米饭。", p:"Wǒ chī mǐfàn.", vn:"Tôi ăn cơm."},
+    {h:"我吃馒头。", p:"Wǒ chī mántou.", vn:"Tôi ăn bánh bao hấp."},
+    {h:"你喝什么？", p:"Nǐ hē shénme?", vn:"Bạn uống gì?"},
+    {h:"我喝茶。", p:"Wǒ hē chá.", vn:"Tôi uống trà."},
+    {h:"今天我请你喝咖啡，可以吗？", p:"Jīntiān wǒ qǐng nǐ hē kāfēi, kěyǐ ma?", vn:"Hôm nay tôi mời bạn đi uống cà phê, được không?"},
+    {h:"好，我们去哪里喝咖啡呢？", p:"Hǎo, wǒmen qù nǎlǐ hē kāfēi ne?", vn:"Ok, chúng ta đi đâu để uống cà phê đây?"},
+    {h:"我们去 A 静咖啡馆喝咖啡。", p:"Wǒmen qù A Jìng kāfēiguǎn hē kāfēi.", vn:"Chúng ta đi quán cà phê A Tinh uống cà phê."},
+    {h:"你好，各位想喝点儿什么？", p:"Nǐ hǎo, gèwèi xiǎng hē diǎnr shénme?", vn:"Xin chào, các bạn muốn uống gì?"},
+    {h:"我喝牛奶咖啡。", p:"Wǒ hē niúnǎi kāfēi.", vn:"Tôi uống cà phê sữa."},
+    {h:"我喝巧克力奶茶。", p:"Wǒ hē qiǎokèlì nǎichá.", vn:"Tôi uống trà sữa socola."},
+    {h:"好的，一杯牛奶咖啡、一杯奶茶。", p:"Hǎo de, yì bēi niúnǎi kāfēi, yì bēi nǎichá.", vn:"Vâng, một ly cà phê sữa và một ly trà sữa."},
+    {h:"牛奶咖啡好喝吗？", p:"Niúnǎi kāfēi hǎo hē ma?", vn:"Cà phê sữa ngon không?"},
+    {h:"好喝，那奶茶呢？——也很好喝。", p:"Hǎo hē, nà nǎichá ne? —— Yě hěn hǎo hē.", vn:"Ngon, còn trà sữa thì sao? — Cũng rất ngon."},
+    {h:"这个菜很好吃。", p:"Zhè ge cài hěn hǎo chī.", vn:"Món này rất ngon."},
+  ]},
+  { title:"苹果一斤多少钱", sentences:[
+    {h:"苹果一斤多少钱？", p:"Píngguǒ yì jīn duōshao qián?", vn:"Táo một cân bao nhiêu tiền?"},
+    {h:"一斤三块。", p:"Yì jīn sān kuài.", vn:"Một cân ba đồng."},
+    {h:"太贵了。", p:"Tài guì le.", vn:"Đắt quá."},
+    {h:"你要几斤？", p:"Nǐ yào jǐ jīn?", vn:"Bạn muốn mấy cân?"},
+    {h:"我买五斤。", p:"Wǒ mǎi wǔ jīn.", vn:"Tôi mua năm cân."},
+    {h:"橘子怎么买？", p:"Júzi zěnme mǎi?", vn:"Quýt bán thế nào?"},
+    {h:"一共多少钱？", p:"Yígòng duōshao qián?", vn:"Tất cả bao nhiêu tiền?"},
+    {h:"便宜一点，可以吗？", p:"Piányi yìdiǎn, kěyǐ ma?", vn:"Rẻ hơn một chút được không?"},
+  ]},
+  { title:"我换人民币", sentences:[
+    {h:"我换人民币。", p:"Wǒ huàn rénmínbì.", vn:"Tôi đổi Nhân dân tệ."},
+    {h:"小姐，我换钱。", p:"Xiǎojiě, wǒ huàn qián.", vn:"Cô ơi, tôi muốn đổi tiền."},
+    {h:"您换什么钱？", p:"Nín huàn shénme qián?", vn:"Anh đổi loại tiền nào?"},
+    {h:"换多少？", p:"Huàn duōshao?", vn:"Đổi bao nhiêu?"},
+    {h:"二百美元。", p:"Èrbǎi měiyuán.", vn:"Hai trăm đô la Mỹ."},
+    {h:"请等一会儿。", p:"Qǐng děng yíhuìr.", vn:"Xin chờ một chút."},
+    {h:"给您钱，请数数。", p:"Gěi nín qián, qǐng shǔshu.", vn:"Tiền của anh đây, mời đếm lại."},
+    {h:"谢谢！不客气！", p:"Xièxie! Bú kèqi!", vn:"Cảm ơn! Không có gì!"},
+  ]},
+  { title:"他住哪儿", sentences:[
+    {h:"他住哪儿？", p:"Tā zhù nǎr?", vn:"Anh ấy ở đâu?"},
+    {h:"他不在，他在家呢。", p:"Tā bú zài, tā zài jiā ne.", vn:"Anh ấy không có ở đây, anh ấy ở nhà."},
+    {h:"他住十八楼。", p:"Tā zhù shíbā lóu.", vn:"Anh ấy ở tầng 18."},
+    {h:"你住在学校吗？", p:"Nǐ zhù zài xuéxiào ma?", vn:"Bạn ở trong trường không?"},
+    {h:"我住在外面。", p:"Wǒ zhù zài wàimiàn.", vn:"Tôi ở bên ngoài."},
+    {h:"您知道他的电话号码吗？", p:"Nín zhīdào tā de diànhuà hàomǎ ma?", vn:"Anh có biết số điện thoại của anh ấy không?"},
+    {h:"他的手机号码是多少？", p:"Tā de shǒujī hàomǎ shì duōshao?", vn:"Số di động của anh ấy là bao nhiêu?"},
+    {h:"我不知道。", p:"Wǒ bù zhīdào.", vn:"Tôi không biết."},
+  ]},
+  { title:"我们都是留学生", sentences:[
+    {h:"我们都是留学生。", p:"Wǒmen dōu shì liúxuéshēng.", vn:"Chúng ta đều là lưu học sinh."},
+    {h:"你是留学生吗？", p:"Nǐ shì liúxuéshēng ma?", vn:"Bạn là lưu học sinh phải không?"},
+    {h:"她也是留学生。", p:"Tā yě shì liúxuéshēng.", vn:"Cô ấy cũng là lưu học sinh."},
+    {h:"他们都是中国学生。", p:"Tāmen dōu shì Zhōngguó xuésheng.", vn:"Họ là học sinh Trung Quốc."},
+    {h:"你也是中国人吗？", p:"Nǐ yě shì Zhōngguó rén ma?", vn:"Bạn cũng là người Trung Quốc phải không?"},
+    {h:"不是，我是韩国人。", p:"Bú shì, wǒ shì Hánguó rén.", vn:"Không phải, tôi là người Hàn Quốc."},
+    {h:"这位是王教授。", p:"Zhè wèi shì Wáng jiàoshòu.", vn:"Đây là Giáo sư Vương."},
+    {h:"我来介绍一下儿。", p:"Wǒ lái jièshào yíxiàr.", vn:"Để tôi giới thiệu một chút."},
+  ]},
+  { title:"你在哪儿学习", sentences:[
+    {h:"你在哪儿学习？", p:"Nǐ zài nǎr xuéxí?", vn:"Bạn học ở đâu?"},
+    {h:"我在北京语言大学学习。", p:"Wǒ zài Běijīng Yǔyán Dàxué xuéxí.", vn:"Tôi học ở Đại học Ngôn ngữ Bắc Kinh."},
+    {h:"你们的老师是谁？", p:"Nǐmen de lǎoshī shì shéi?", vn:"Thầy của các bạn là ai?"},
+    {h:"我们的老师是林老师。", p:"Wǒmen de lǎoshī shì Lín lǎoshī.", vn:"Thầy của chúng tôi là thầy Lâm."},
+    {h:"你觉得学习汉语难吗？", p:"Nǐ juéde xuéxí Hànyǔ nán ma?", vn:"Bạn thấy học tiếng Trung khó không?"},
+    {h:"我觉得语法不太难。", p:"Wǒ juéde yǔfǎ bú tài nán.", vn:"Tôi thấy ngữ pháp không khó lắm."},
+    {h:"听和说也比较容易，但是读和写很难。", p:"Tīng hé shuō yě bǐjiào róngyì, dànshì dú hé xiě hěn nán.", vn:"Nghe và nói cũng khá dễ, nhưng đọc và viết rất khó."},
+    {h:"这是我的同屋。", p:"Zhè shì wǒ de tóngwū.", vn:"Đây là bạn cùng phòng của tôi."},
+  ]},
+];
+
+const MODES = [
+  {id:"listen", label:"听音写句子", desc:"Nghe rồi viết cả câu"},
+  {id:"pinyin", label:"看拼音写句子", desc:"Nhìn phiên âm viết chữ Hán"},
+];
+
+/* ---------- 状态 ---------- */
+const S = {
+  view:"home", tab:"practice",
+  lesson:0, mode:"listen", rate:0.65, random:true,
+  queue:[], idx:0, correct:0, wrong:[], usedHint:false, answered:false,
+};
+
+/* ---------- 本地存储 ---------- */
+const store = {
+  get(k,d){ try{ return JSON.parse(localStorage.getItem(k)) ?? d; }catch(e){ return d; } },
+  set(k,v){ localStorage.setItem(k, JSON.stringify(v)); }
+};
+const stats = ()=> store.get("hy_stats", {});
+const mistakes = ()=> store.get("hy_mistakes", {});
+
+/* ---------- 语音 ---------- */
+function speak(text){
+  if(!("speechSynthesis" in window)){ alert("Trình duyệt không hỗ trợ đọc giọng nói."); return; }
+  if(!text) return;
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = "zh-CN"; u.rate = S.rate; u.pitch = 1;
+  const vs = speechSynthesis.getVoices();
+  const v = vs.find(x=>x.lang && x.lang.toLowerCase().startsWith("zh"));
+  if(v) u.voice = v;
+  speechSynthesis.speak(u);
+}
+if("speechSynthesis" in window){ speechSynthesis.getVoices(); }
+
+/* ---------- 工具 ---------- */
+const $ = id=>document.getElementById(id);
+function shuffle(a){ a=[...a]; for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+function norm(s){ return (s||"").replace(/[\s。！？，、,!?.;：:·…—\-]/g,"").trim(); }
+
+/* ---------- 视图：首页 ---------- */
+function goHome(){ S.view="home"; S.answered=false; render(); $("btnHome").style.display="none"; }
+
+function render(){
+  const app = $("app");
+  if(S.view==="home") app.innerHTML = homeHTML();
+  else if(S.view==="quiz") app.innerHTML = quizHTML();
+  else if(S.view==="result") app.innerHTML = resultHTML();
+  bindHome();
+}
+
+function homeHTML(){
+  const st = stats(), ms = mistakes();
+  let cards = LESSONS.map((L,i)=>{
+    const s = st[i], m = ms[i]||[];
+    const acc = s && s.t ? Math.round(s.c/s.t*100) : null;
+    return `
+    <div class="lesson" onclick="startQuiz(${i})">
+      <div class="num">BÀI ${i+1}</div>
+      <div class="title">${L.title}</div>
+      <div class="meta">
+        <span>${L.sentences.length} câu</span>
+        ${acc!==null?`<span class="badge">${acc}%</span>`:`<span class="badge">Mới</span>`}
+      </div>
+      <div class="mini">
+        ${m.length?`<button onclick="event.stopPropagation();startQuiz(${i},true)">Luyện lại ${m.length} câu sai</button>`:`<button onclick="event.stopPropagation();openDict(${i})">Xem câu thoại</button>`}
+      </div>
+    </div>`;
+  }).join("");
+
+  const modeBtns = MODES.map(m=>`
+    <button class="${S.mode===m.id?"on":""}" onclick="setMode('${m.id}')">${m.label}</button>
+  `).join("");
+
+  return `
+  <div class="tabbar">
+    <button class="${S.tab==="practice"?"on":""}" onclick="switchTab('practice')">Luyện tập</button>
+    <button class="${S.tab==="dict"?"on":""}" onclick="switchTab('dict')">Câu thoại</button>
+  </div>
+
+  ${S.tab==="practice" ? `
+  <div class="panel">
+    <h2>Chế độ luyện tập</h2>
+    <div class="seg" style="margin-bottom:12px">${modeBtns}</div>
+    <div class="row">
+      <label class="toggle">Tốc độ đọc
+        <select onchange="S.rate=parseFloat(this.value)">
+          <option value="0.65" ${S.rate==0.65?"selected":""}>Chậm</option>
+          <option value="0.85" ${S.rate==0.85?"selected":""}>Vừa phải</option>
+          <option value="1" ${S.rate==1?"selected":""}>Bình thường</option>
+        </select>
+      </label>
+      <label class="toggle"><input type="checkbox" ${S.random?"checked":""} onchange="S.random=this.checked"> Trộn thứ tự</label>
+    </div>
+  </div>
+  <div class="grid">${cards}</div>
+  <div class="note">💡 Câu tập theo nội dung bài tập từ Bài 3–5 và các bài 6–12, mỗi câu có phiên âm và dịch nghĩa tiếng Việt. So khớp bỏ qua dấu câu và khoảng trắng. Câu sai sẽ được lưu để luyện lại. Nếu có câu nào chưa khớp sách, bạn báo lại để mình sửa.</div>
+  ` : `
+  <input class="dict-search" placeholder="Tìm chữ Hán / phiên âm / nghĩa…" oninput="renderDict(this.value)">
+  <div id="dictList"></div>
+  `}
+  `;
+}
+
+function bindHome(){
+  if(S.tab==="dict") renderDict("");
+}
+function switchTab(t){ S.tab=t; render(); }
+function setMode(m){ S.mode=m; render(); }
+
+/* ---------- 句子表 ---------- */
+function openDict(i){ S.tab="dict"; S.view="home"; render(); setTimeout(()=>{ const el=$("dictList"); if(el) el.scrollIntoView(); },50); }
+function renderDict(q){
+  q = (q||"").toLowerCase();
+  let html="";
+  LESSONS.forEach((L,i)=>{
+    const items = L.sentences.filter(w=>!q || w.h.includes(q) || w.p.toLowerCase().includes(q) || w.vn.toLowerCase().includes(q));
+    if(!items.length) return;
+    html += `<div style="margin:14px 0 8px;font-size:13px;color:var(--sub)">Bài ${i+1} · ${L.title}</div>`;
+    html += items.map(w=>`
+      <div class="dict-item">
+        <div class="txt">
+          <div class="h">${w.h}</div>
+          <div class="p">${w.p}</div>
+          <div class="v">${w.vn}</div>
+        </div>
+        <button onclick="speak('${w.h}')">🔊</button>
+      </div>`).join("");
+  });
+  $("dictList").innerHTML = html || `<div style="color:var(--sub);font-size:13px;text-align:center;padding:20px">Không tìm thấy câu phù hợp.</div>`;
+}
+
+/* ---------- 练习流程 ---------- */
+function startQuiz(lessonIdx, onlyMistakes=false){
+  S.lesson = lessonIdx;
+  let words = LESSONS[lessonIdx].sentences;
+  if(onlyMistakes){
+    const miss = mistakes()[lessonIdx]||[];
+    words = words.filter(w=>miss.includes(w.h));
+    if(!words.length){ alert("Hiện không có câu sai nào cần luyện lại."); return; }
+  }
+  S.queue = S.random ? shuffle(words) : [...words];
+  S.idx=0; S.correct=0; S.wrong=[]; S.usedHint=false; S.answered=false;
+  S.view="quiz"; $("btnHome").style.display="block"; render();
+}
+
+function quizHTML(){
+  const w = S.queue[S.idx];
+  const total = S.queue.length;
+  const mode = MODES.find(m=>m.id===S.mode);
+  const showPinyin = S.mode==="pinyin";
+
+  const body = `
+    <div class="prompt">${showPinyin?"Nhìn phiên âm, viết cả câu chữ Hán":"Nghe thật kỹ rồi viết cả câu"}</div>
+    ${showPinyin?`<div class="pinyin-line">${w.p}</div>`:`<button class="big-play" onclick="speak('${w.h}')">🔊</button>`}
+    ${S.usedHint?`<div class="vn-hint">${w.p}<br>${w.vn}</div>`:`<div class="vn-hint">${w.vn}</div>`}
+    <textarea class="answer-input" id="ans" rows="2" placeholder="viết cả câu tại đây…" autocomplete="off"></textarea>
+    <div class="actions">
+      <button class="btn-ghost" onclick="revealHint()">💡 Gợi ý</button>
+      <button class="btn-ghost" onclick="speak('${w.h}')">🔊 Nghe lại</button>
+      <button class="btn-primary" onclick="submitAnswer()">Xong</button>
+    </div>`;
+
+  return `
+    <div class="quiz-top">
+      <span>Bài ${S.lesson+1} · ${LESSONS[S.lesson].title}</span>
+      <span>${S.idx+1} / ${total} · ${mode.label}</span>
+    </div>
+    <div class="progress"><i style="width:${(S.idx)/total*100}%"></i></div>
+    <div class="card-quiz">${body}</div>
+    <div id="feedback"></div>
+    <div class="center-btns" id="nextBar" style="display:none"></div>
+  `;
+}
+
+function revealHint(){ S.usedHint=true; render(); focusInput(); }
+function focusInput(){ setTimeout(()=>{ const a=$("ans"); if(a) a.focus(); },60); }
+
+function submitAnswer(){
+  if(S.answered) return;
+  const w = S.queue[S.idx];
+  const val = norm($("ans").value);
+  if(!val){ $("ans").focus(); return; }
+  const ok = val === norm(w.h);
+  finishQuestion(w, ok, $("ans").value.trim());
+}
+
+function finishQuestion(w, ok, mine){
+  S.answered=true;
+  if(ok) S.correct++; else S.wrong.push(w);
+
+  const st = stats(); const cur = st[S.lesson]||{c:0,t:0};
+  cur.t++; cur.c += ok?1:0; st[S.lesson]=cur; store.set("hy_stats",st);
+  const ms = mistakes();
+  const arr = ms[S.lesson]||[];
+  if(ok){ const i=arr.indexOf(w.h); if(i>=0) arr.splice(i,1); }
+  else if(!arr.includes(w.h)) arr.push(w.h);
+  ms[S.lesson]=arr; store.set("hy_mistakes",ms);
+
+  const fb = $("feedback");
+  fb.className = "feedback "+(ok?"ok":"no");
+  fb.innerHTML = `
+    <div class="tag" style="color:${ok?"var(--good)":"var(--bad)"}">${ok?"✔ Chính xác":"✘ Chưa đúng"}</div>
+    <div class="sentence">${w.h}</div>
+    <div class="py">${w.p}</div>
+    <div class="vn">${w.vn}</div>
+    ${!ok?`<div class="mine">Bạn đã viết: ${mine}</div>`:""}
+  `;
+  speak(ok?w.h:"");
+
+  const bar = $("nextBar"); bar.style.display="flex";
+  const last = S.idx===S.queue.length-1;
+  bar.innerHTML = `
+    <button class="btn-ghost" onclick="nextQuestion()">${last?"Xem kết quả":"Bỏ qua"}</button>
+    <button class="btn-primary" onclick="nextQuestion()">${last?"Xem kết quả":"Câu tiếp →"}</button>
+  `;
+}
+
+function nextQuestion(){
+  S.idx++; S.usedHint=false; S.answered=false;
+  if(S.idx>=S.queue.length){ S.view="result"; }
+  render();
+  if(S.view==="quiz") focusInput();
+}
+
+/* ---------- 结果页 ---------- */
+function resultHTML(){
+  const total = S.queue.length;
+  const pct = total? Math.round(S.correct/total*100):0;
+  const wrongItems = S.wrong.map(w=>`
+    <div class="item bad">
+      <div><strong>${w.h}</strong><div class="meta">${w.p}</div></div>
+      <div class="meta">${w.vn}</div>
+    </div>`).join("");
+  const rightItems = S.queue.filter(w=>!S.wrong.includes(w)).map(w=>`
+    <div class="item">
+      <div><strong>${w.h}</strong><div class="meta">${w.p}</div></div>
+      <div class="meta">${w.vn}</div>
+    </div>`).join("");
+
+  return `
+    <div class="result">
+      <div class="prompt">Kết quả bài ${S.lesson+1} · ${LESSONS[S.lesson].title}</div>
+      <div class="score">${pct}%</div>
+      <p>Đúng ${S.correct} / ${total} câu${S.wrong.length?` · Cần luyện lại ${S.wrong.length} câu`:", rất tốt!"}</p>
+      <div class="center-btns">
+        <button class="btn-primary" onclick="startQuiz(${S.lesson})">Luyện lại bài</button>
+        <button class="btn-ghost" onclick="startQuiz(${S.lesson},true)">Chỉ luyện câu sai</button>
+        <button class="btn-ghost" onclick="goHome()">Về trang chủ</button>
+      </div>
+      ${S.wrong.length?`<div class="review-list"><h2 style="font-size:14px;color:var(--bad);margin:18px 0 6px">Câu chưa đúng</h2>${wrongItems}</div>`:""}
+      ${rightItems?`<div class="review-list"><h2 style="font-size:14px;color:var(--good);margin:18px 0 6px">Câu đã đúng</h2>${rightItems}</div>`:""}
+    </div>
+  `;
+}
+
+render();
+</script>
+</body>
+</html>
+<!-- （注：内容由AI生成） -->
